@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# 📚 Proyecto de Gestión de Préstamos de una Universidad
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este es un **proyecto de React** para la gestión de **préstamos** en una universidad. El sistema permite la gestión de usuarios, materiales y préstamos a través de una interfaz web simple y eficiente.
 
-## Available Scripts
+## 🚀 Funcionalidades
 
-In the project directory, you can run:
+El sistema incluye un **CRUD** (Crear, Leer, Actualizar y Eliminar) para gestionar los siguientes aspectos:
 
-### `npm start`
+- **👤 Usuarios**: Administrar la información de los usuarios que realizarán los préstamos.
+- **📦 Materiales**: Registrar y mantener los materiales disponibles para el préstamo.
+- **🔄 Préstamos**: Registrar, ver y gestionar los préstamos de los materiales a los usuarios.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🛠️ Tecnologías Utilizadas
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **React**: Librería principal para el desarrollo de la interfaz de usuario.
+- **Chakra UI**: Framework de componentes para React que proporciona una experiencia de diseño moderna y accesible.
+- **React Router**: Para la navegación entre las diferentes vistas del sistema.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 📂 Estructura del Proyecto
 
-### `npm run build`
+- **`src/`**: Contiene todo el código fuente del proyecto.
+  - **`/pages`**: Carpeta que contiene los componentes principales de las páginas.
+    - **`home.js`**: Página principal del Dashboard.
+    - **`login.js`**: Página de inicio de sesión.
+    - **`usuarios.js`**: Página para gestionar usuarios.
+    - **`materiales.js`**: Página para gestionar materiales.
+    - **`prestamos.js`**: Página para gestionar los préstamos.
+  - **`index.js`**: Archivo principal que renderiza la aplicación y configura las rutas.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🏁 Iniciar el Proyecto
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Para iniciar el proyecto en tu entorno local, sigue los siguientes pasos:
 
-### `npm run eject`
+1. Instala las dependencias:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   ```bash
+   npm install
+   ```
+2. Iniciar el proyecto:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   npm start
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Esto abrirá la aplicación en tu navegador en http://localhost:3000.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+## 📍 Rutas
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **`/`**: Página de inicio de sesion.
+- **`/Dashboard`**: Página principal de administración..
+- **`/usuarios`**: Página para gestionar usuarios.
+- **`/materiales`**: Página para gestionar materiales.
+- **`/prestamos`**: Página para gestionar prestamos.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 👥 Integrantes del Proyecto
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Backend**: [KalidRs](https://github.com/KalidRs)
+- **Frontend**: [Luisivmaraz](https://github.com/Luisivmaraz)
+- **Base de Datos**: [Aldotd12](https://github.com/Aldotd12)
