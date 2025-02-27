@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import Dashboard from "./pages/home";
 import Login from "./pages/login";
 import Usuarios from './pages/usuarios';
+import Materiales from './pages/materiales';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,7 @@ root.render(
         <Route path="/" element={<Login />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Usuarios" element={<Usuarios />} />
+        <Route path="/Materiales" element={<Materiales />} />
       </Routes>
     </BrowserRouter>
   </ChakraProvider>
