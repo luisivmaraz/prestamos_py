@@ -8,6 +8,7 @@ import Dashboard from "./pages/home";
 import Login from "./pages/login";
 import Usuarios from './pages/usuarios';
 import Materiales from './pages/materiales';
+import Prestamos from './pages/prestamos';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +19,7 @@ root.render(
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/Usuarios" element={<Usuarios />} />
         <Route path="/Materiales" element={<Materiales />} />
+        <Route path="/Prestamos" element={<Prestamos />} />
       </Routes>
     </BrowserRouter>
   </ChakraProvider>

@@ -83,7 +83,7 @@ const Materiales = () => {
         </Table>
       </Box>
 
-      {/* Modal de agregar material */}
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -117,7 +117,7 @@ const Materiales = () => {
         </ModalContent>
       </Modal>
 
-      {/* Modal de editar material */}
+
       <Modal isOpen={isEditOpen} onClose={onEditClose}>
         <ModalOverlay />
         <ModalContent>
