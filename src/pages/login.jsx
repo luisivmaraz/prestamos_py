@@ -1,6 +1,5 @@
 import React from 'react';
-import { Card,Input,Heading, CardBody,Button,CardFooter, Image,Text, Box } from '@chakra-ui/react';
-import {FormControl,FormLabel,} from '@chakra-ui/react';
+import { Card,Input,Heading, CardBody,Button,CardFooter, Image,Text, Box, FormControl, FormLabel} from '@chakra-ui/react';
 import {ArrowForwardIcon} from '@chakra-ui/icons'
 const Login = () => {
   return (

@@ -4,8 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Home from "./pages/home";
+import Dashboard from "./pages/home";
 import Login from "./pages/login";
+import Usuarios from './pages/usuarios';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,7 +14,8 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Dashboard" element={<Home />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/Usuarios" element={<Usuarios />} />
       </Routes>
     </BrowserRouter>
   </ChakraProvider>
