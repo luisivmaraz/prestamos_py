@@ -5,7 +5,9 @@ import {
   FormControl, FormLabel, Input, Select, ModalFooter, useDisclosure
 } from '@chakra-ui/react';
 import { BiSolidChevronLeft, BiSolidUserPlus, BiSolidUserX, BiSolidPencil } from "react-icons/bi";
+import { Link } from 'react-router-dom';
 
+// eslint-disable-next-line
   {/* aqui van kos hooks y datos de ejemplo para la tabla */}
 const Usuarios = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,9 +53,11 @@ const Usuarios = () => {
         <Button leftIcon={<BiSolidUserPlus />} colorScheme="teal" mb={4} onClick={onOpen}>
           Agregar Usuario
         </Button>
-        <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
-          Dashboard
-        </Button>
+       <Link to="/Dashboard"> 
+           <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+            Dashboard
+            </Button> 
+        </Link> 
 
           {/* se utilioza usuraiors para agregar los datos de manea oiteratva, "Usuario, setUsuario" */}
         <Table variant="striped" colorScheme='teal' size='sm'>

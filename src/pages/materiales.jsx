@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react';
 import { BiSolidChevronLeft, BiSolidPencil } from "react-icons/bi";
 import { BsWrenchAdjustable,BsXCircle  } from "react-icons/bs";
+import { Link} from 'react-router-dom';
 
 const Materiales = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,9 +51,11 @@ const Materiales = () => {
         <Button leftIcon={<BsWrenchAdjustable />} colorScheme="teal" mb={4} onClick={onOpen}>
           Agregar Material
         </Button>
-        <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
-          Dashboard
-        </Button>
+        <Link to="/Dashboard"> 
+           <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+            Dashboard
+            </Button> 
+        </Link> 
 
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>

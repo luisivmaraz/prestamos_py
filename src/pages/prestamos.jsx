@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react'; 
 import { BiSolidChevronLeft,BiSolidPencil } from "react-icons/bi";
 import { BsXCircle,BsPlusLg  } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 
 const Prestamos = () => {
@@ -52,10 +53,11 @@ const Prestamos = () => {
         <Button leftIcon={<BsPlusLg  />} colorScheme="teal" mb={4} onClick={onOpen}>
           Agregar Préstamo
         </Button>
-        <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
-          Dashboard
-        </Button>
-
+        <Link to="/Dashboard"> 
+            <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+            Dashboard
+            </Button> 
+        </Link> 
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>
             <Tr>
