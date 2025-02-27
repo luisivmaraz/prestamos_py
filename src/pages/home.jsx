@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button, Heading, VStack, HStack, Container, Icon } from '@chakra-ui/react';
 import { BiSolidUser,BiSolidDonateBlood,BiSolidCube    } from 'react-icons/bi';
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 
 const Dashboard = () => {
@@ -28,6 +29,11 @@ const Dashboard = () => {
           </HStack>
         </VStack>
       </Container>
+      <Container  position="fixed" bottom="0"  left="0" width="100%"  justifyContent="flex-end" p={4} bg="transparent"  > <Link to="/"> 
+              <Button leftIcon={<Icon as={IoMdArrowRoundBack } />} colorScheme="black" variant='outline' size="lg" width="130px" borderRadius="full" boxShadow="md" _hover={{ transform: 'scale(1.05)' }}>
+                Salir
+              </Button>
+              </Link> </Container>
     </Box>
   );
 };

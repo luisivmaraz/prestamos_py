@@ -114,7 +114,7 @@ const Usuarios = () => {
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Tipo de Usuario</FormLabel>
-              <Select value={newUser.tipo} onChange={(e) => setNewUser({ ...newUser, tipo: e.target.value })}>
+              <Select value={newUser.tipo} onChange={(e) => setNewUser({ ...newUser, tipo: e.target.value })}> {/* aqui se agregan las opciones */}
                 <option>Admin</option>
                 <option>Usuario</option>
               </Select>
