@@ -106,19 +106,19 @@ const Materiales = () => {
   
 
   return (
-    <Box backgroundColor="teal.600" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
+    <Box backgroundColor="orange.400" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
       <Heading color="white" textAlign="center" mb={8} fontSize="3xl">Gestión de Materiales</Heading>
       <Box bg="white" p={6} borderRadius="lg" boxShadow="xl" width="80%">
-        <Button leftIcon={<BsWrenchAdjustable />} colorScheme="teal" mb={4} onClick={onOpen}>
+        <Button leftIcon={<BsWrenchAdjustable />} colorScheme="blue" mb={4} onClick={onOpen}>
           Agregar Material
         </Button>
         <Link to="/Dashboard">
-          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="green" mb={4}>
             Dashboard
           </Button>
         </Link>
 
-        <Table variant="striped" colorScheme='teal' size='sm'>
+        <Table variant="striped" colorScheme='blue' size='sm'>
           <Thead>
             <Tr>
               <Th>Tipo de Material</Th>

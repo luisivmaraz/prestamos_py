@@ -144,19 +144,19 @@ const Usuarios = () => {
   };
 
   return (
-    <Box backgroundColor="teal.600" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
+    <Box backgroundColor="orange.400" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
       <Heading color="white" textAlign="center" mb={8} fontSize="3xl">Gestión de Usuarios</Heading>
       <Box bg="white" p={6} borderRadius="lg" boxShadow="xl" >
-        <Button leftIcon={<BiSolidUserPlus />} colorScheme="teal" mb={4} onClick={onOpen}>
+        <Button leftIcon={<BiSolidUserPlus />} colorScheme="green" mb={4} onClick={onOpen}>
           Agregar Usuario
         </Button>
         <Link to="/Dashboard">
-          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="blue" mb={4}>
             Dashboard
           </Button>
         </Link>
 
-        <Table variant="striped" colorScheme='teal' size='sm'>
+        <Table variant="striped" colorScheme='blue' size='sm'>
           <Thead>
             <Tr>
               <Th>Nombre</Th>

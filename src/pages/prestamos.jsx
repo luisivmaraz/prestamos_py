@@ -191,18 +191,18 @@ const Loans = () => {
   };
 
   return (
-    <Box backgroundColor="teal.600" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
+    <Box backgroundColor="orange.400" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
       <Heading color="white" textAlign="center" mb={8} fontSize="3xl">Loan Management</Heading>
       <Box bg="white" p={6} borderRadius="lg" boxShadow="xl" width="80%">
-        <Button leftIcon={<BsPlusLg />} colorScheme="teal" mb={4} onClick={onOpen}>
+        <Button leftIcon={<BsPlusLg />} colorScheme="green" mb={4} onClick={onOpen}>
           Add Loan
         </Button>
         <Link to="/Dashboard">
-          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="blue" mb={4}>
             Dashboard
           </Button>
         </Link>
-        <Table variant="striped" colorScheme='teal' size='sm'>
+        <Table variant="striped" colorScheme='blue' size='sm'>
           <Thead>
             <Tr>
               <Th>Usuario</Th>
