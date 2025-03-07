@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react';
 import {
   Box, Button, Heading, Table, Thead, Tbody, Tr, Th, Td, IconButton,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton,
@@ -7,43 +7,140 @@ import {
 import { BiSolidChevronLeft, BiSolidUserPlus, BiSolidUserX, BiSolidPencil } from "react-icons/bi";
 import { Link } from 'react-router-dom';
 
-// eslint-disable-next-line
-  {/* aqui van kos hooks y datos de ejemplo para la tabla */}
 const Usuarios = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-  const [usuarios, setUsuarios] = useState([
-    { id: 1, nombre: 'Juan', apellido: 'Pérez', tipo: 'Admin', correo: 'juan@example.com', telefono: '1234567890', estatus: 'Activo', registro: '2023-01-01', actualizacion: '2023-06-01' },
-    { id: 2, nombre: 'Ana', apellido: 'Gómez', tipo: 'Usuario', correo: 'ana@example.com', telefono: '0987654321', estatus: 'Inactivo', registro: '2023-02-01', actualizacion: '2023-07-01' }
-  ]);
+
+  const [usuarios, setUsuarios] = useState([]);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    last_name: '',
+    type_user: '',
+    user_name: '',
+    email: '',
+    password: '',
+    phone_number: '',
+    status: 'Activo' // Valor predeterminado
+  });
 
   const [selectedUser, setSelectedUser] = useState(null);
-  const [newUser, setNewUser] = useState({
-    nombre: '',
-    apellido: '',
-    tipo: '',
-    correo: '',
-    telefono: '',
-    estatus: ''
-  });
+
+  // Cargar usuarios desde la API
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/user', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+
+        const data = await response.json();
+        setUsuarios(data);
+      } catch (error) {
+        console.error('Error al hacer la solicitud:', error);
+      }
+    };
+    fetchUsuarios();
+  }, []);
+
+  // Guardar un nuevo usuario
+  const handleSaveNewUser = async () => {
+    // Validación para asegurarse de que todos los campos estén completos
+    console.log('Formulario:', newUser);
+
+    if (!newUser.name || !newUser.last_name || !newUser.type_user || !newUser.user_name || !newUser.email || !newUser.password || !newUser.phone_number || !newUser.status) {
+      console.error('Todos los campos son requeridos');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/user/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      // Verificar que la respuesta sea exitosa
+      if (response.ok) {
+        const addedUser = await response.json();
+        setUsuarios([...usuarios, addedUser]);
+        onClose();
+        setNewUser({
+          name: '',
+          last_name: '',
+          type_user: '',
+          user_name: '',
+          email: '',
+          password: '',
+          phone_number: '',
+          status: 'Active'
+        });
+      } else {
+        const errorData = await response.json();
+        console.error('Error al agregar usuario:', errorData);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  };
+
+  // Editar un usuario
+  const handleSaveEdit = async () => {
+    try {
+      if (!selectedUser?.id) {
+        console.error("El usuario seleccionado no tiene un ID válido.");
+        return;
+      }
+
+      const response = await fetch(`http://127.0.0.1:8000/user/${selectedUser.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(selectedUser),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUsuarios(usuarios.map(user => user.id === updatedUser.id ? updatedUser : user));
+        onEditClose();
+      } else {
+        const errorData = await response.json();
+        console.error('Error al editar usuario:', errorData.detail || 'Error desconocido');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error.message);
+    }
+  };
+
+
+  const handleDeleteUser = async (id) => {
+    const response = await fetch(`http://127.0.0.1:8000/user/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    if (response.ok) {
+      setUsuarios(usuarios.filter(user => user.id !== id));
+    } else {
+      console.error('Error al eliminar usuario');
+    }
+  };
 
   const handleEdit = (user) => {
     setSelectedUser(user);
     onEditOpen();
-  };
-
-  const handleSaveEdit = () => {
-    setUsuarios(usuarios.map(user => user.id === selectedUser.id ? selectedUser : user));
-    onEditClose();
-  };
-
-  const handleSaveNewUser = () => {
-    setUsuarios([
-      ...usuarios,
-      { id: usuarios.length + 1, ...newUser, registro: new Date().toISOString().split('T')[0], actualizacion: new Date().toISOString().split('T')[0] }
-    ]);
-    onClose(); 
-    setNewUser({ nombre: '', apellido: '', tipo: '', correo: '', telefono: '', estatus: '' }); // Limpiar formulario
   };
 
   return (
@@ -53,13 +150,12 @@ const Usuarios = () => {
         <Button leftIcon={<BiSolidUserPlus />} colorScheme="teal" mb={4} onClick={onOpen}>
           Agregar Usuario
         </Button>
-       <Link to="/Dashboard"> 
-           <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
+        <Link to="/Dashboard">
+          <Button marginLeft={10} leftIcon={<BiSolidChevronLeft />} colorScheme="teal" mb={4}>
             Dashboard
-            </Button> 
-        </Link> 
+          </Button>
+        </Link>
 
-          {/* se utilioza usuraiors para agregar los datos de manea oiteratva, "Usuario, setUsuario" */}
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>
             <Tr>
@@ -79,17 +175,17 @@ const Usuarios = () => {
             {usuarios.map(user => (
               <Tr key={user.id}>
                 <Td>{user.id}</Td>
-                <Td>{user.nombre}</Td>
-                <Td>{user.apellido}</Td>
-                <Td>{user.tipo}</Td>
-                <Td>{user.correo}</Td>
-                <Td>{user.telefono}</Td>
-                <Td>{user.estatus}</Td>
-                <Td>{user.registro}</Td>
-                <Td>{user.actualizacion}</Td>
+                <Td>{user.name}</Td>
+                <Td>{user.last_name}</Td>
+                <Td>{user.type_user}</Td>
+                <Td>{user.email}</Td>
+                <Td>{user.phone_number}</Td>
+                <Td>{user.status}</Td>
+                <Td>{user.registration_date}</Td>
+                <Td>{user.update_date}</Td>
                 <Td>
                   <IconButton icon={<BiSolidPencil />} size='sm' colorScheme="blue" variant='ghost' mr={2} onClick={() => handleEdit(user)} />
-                  <IconButton icon={<BiSolidUserX />} size='sm' colorScheme="red" variant='ghost' />
+                  <IconButton icon={<BiSolidUserX />} size='sm' colorScheme="red" variant='ghost' onClick={() => handleDeleteUser(user.id)} />
                 </Td>
               </Tr>
             ))}
@@ -97,7 +193,7 @@ const Usuarios = () => {
         </Table>
       </Box>
 
-        {/* moadl de agrwgar usuario */}
+      {/* Modal para agregar usuario */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -106,22 +202,30 @@ const Usuarios = () => {
           <ModalBody>
             <FormControl mb={4}>
               <FormLabel>Nombre</FormLabel>
-              <Input value={newUser.nombre} onChange={(e) => setNewUser({ ...newUser, nombre: e.target.value })} />
+              <Input value={newUser.name} onChange={(e) => setNewUser({ ...newUser, name: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Apellido</FormLabel>
-              <Input value={newUser.apellido} onChange={(e) => setNewUser({ ...newUser, apellido: e.target.value })} />
+              <Input value={newUser.last_name} onChange={(e) => setNewUser({ ...newUser, last_name: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Tipo de Usuario</FormLabel>
-              <Select value={newUser.tipo} onChange={(e) => setNewUser({ ...newUser, tipo: e.target.value })}> {/* aqui se agregan las opciones */}
-                <option>Admin</option>
-                <option>Usuario</option>
+              <Select value={newUser.type_user} onChange={(e) => setNewUser({ ...newUser, type_user: e.target.value })}>
+                <option>Teacher</option>
+                <option>Secretary</option>
+                <option>Student</option>
+                <option>Laboratory</option>
+                <option>Executive</option>
+                <option>Administrative</option>
               </Select>
             </FormControl>
             <FormControl mb={4}>
+              <FormLabel>Nombre de Usuario</FormLabel>
+              <Input value={newUser.user_name} onChange={(e) => setNewUser({ ...newUser, user_name: e.target.value })} />
+            </FormControl>
+            <FormControl mb={4}>
               <FormLabel>Correo</FormLabel>
-              <Input type="email" value={newUser.correo} onChange={(e) => setNewUser({ ...newUser, correo: e.target.value })} />
+              <Input type="email" value={newUser.email} onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Contraseña</FormLabel>
@@ -129,13 +233,13 @@ const Usuarios = () => {
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Teléfono</FormLabel>
-              <Input value={newUser.telefono} onChange={(e) => setNewUser({ ...newUser, telefono: e.target.value })} />
+              <Input value={newUser.phone_number} onChange={(e) => setNewUser({ ...newUser, phone_number: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Estatus</FormLabel>
-              <Select value={newUser.estatus} onChange={(e) => setNewUser({ ...newUser, estatus: e.target.value })}>
-                <option>Activo</option>
-                <option>Inactivo</option>
+              <Select value={newUser.status} onChange={(e) => setNewUser({ ...newUser, status: e.target.value })}>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
               </Select>
             </FormControl>
           </ModalBody>
@@ -146,7 +250,7 @@ const Usuarios = () => {
         </ModalContent>
       </Modal>
 
-        {/* modal de editar usuaeio */}
+      {/* Modal para editar usuario */}
       <Modal isOpen={isEditOpen} onClose={onEditClose}>
         <ModalOverlay />
         <ModalContent>
@@ -155,37 +259,38 @@ const Usuarios = () => {
           <ModalBody>
             <FormControl mb={4}>
               <FormLabel>Nombre</FormLabel>
-              <Input value={selectedUser?.nombre || ''} onChange={(e) => setSelectedUser({ ...selectedUser, nombre: e.target.value })} />
+              <Input value={selectedUser?.name || ''} onChange={(e) => setSelectedUser({ ...selectedUser, name: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Apellido</FormLabel>
-              <Input value={selectedUser?.apellido || ''} onChange={(e) => setSelectedUser({ ...selectedUser, apellido: e.target.value })} />
+              <Input value={selectedUser?.last_name || ''} onChange={(e) => setSelectedUser({ ...selectedUser, last_name: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Tipo de Usuario</FormLabel>
-              <Select value={selectedUser?.tipo || ''} onChange={(e) => setSelectedUser({ ...selectedUser, tipo: e.target.value })}>
-                <option>Admin</option>
-                <option>Usuario</option>
+              <Select value={selectedUser?.type_user || ''} onChange={(e) => setSelectedUser({ ...selectedUser, type_user: e.target.value })}>
+                <option>Teacher</option>
+                <option>Secretary</option>
+                <option>Student</option>
+                <option>Laboratory</option>
+                <option>Executive</option>
+                <option>Administrative</option>
               </Select>
+            </FormControl>
+            <FormControl mb={4}>
+              <FormLabel>Nombre de Usuario</FormLabel>
+              <Input value={selectedUser?.user_name || ''} onChange={(e) => setSelectedUser({ ...selectedUser, user_name: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Correo</FormLabel>
-              <Input type="email" value={selectedUser?.correo || ''} onChange={(e) => setSelectedUser({ ...selectedUser, correo: e.target.value })} />
+              <Input value={selectedUser?.email || ''} onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })} />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Teléfono</FormLabel>
-              <Input value={selectedUser?.telefono || ''} onChange={(e) => setSelectedUser({ ...selectedUser, telefono: e.target.value })} />
-            </FormControl>
-            <FormControl mb={4}>
-              <FormLabel>Estatus</FormLabel>
-              <Select value={selectedUser?.estatus || ''} onChange={(e) => setSelectedUser({ ...selectedUser, estatus: e.target.value })}>
-                <option>Activo</option>
-                <option>Inactivo</option>
-              </Select>
+              <Input value={selectedUser?.phone_number || ''} onChange={(e) => setSelectedUser({ ...selectedUser, phone_number: e.target.value })} />
             </FormControl>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" mr={3} onClick={handleSaveEdit}>Guardar</Button>
+            <Button colorScheme="blue" mr={3} onClick={handleSaveEdit}>Guardar</Button>
             <Button onClick={onEditClose}>Cancelar</Button>
           </ModalFooter>
         </ModalContent>
