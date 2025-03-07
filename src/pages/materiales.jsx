@@ -23,6 +23,7 @@ const Materiales = () => {
 
   const token = localStorage.getItem('authToken');
 
+
   // Obtener los materiales desde la API
   useEffect(() => {
     fetch('http://127.0.0.1:8000/material/', {
@@ -120,7 +121,6 @@ const Materiales = () => {
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>
             <Tr>
-              <Th>ID</Th>
               <Th>Tipo de Material</Th>
               <Th>Marca</Th>
               <Th>Modelo</Th>
@@ -131,7 +131,6 @@ const Materiales = () => {
           <Tbody>
             {materiales.map(material => (
               <Tr key={material.ID_Material}>
-                <Td>{material.ID_Material}</Td>
                 <Td>{material.material_type}</Td>
                 <Td>{material.brand}</Td>
                 <Td>{material.model}</Td>

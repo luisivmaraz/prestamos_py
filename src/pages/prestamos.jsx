@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Button, Heading, Table, Thead, Tbody, Tr, Th, Td, IconButton,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton,
-  FormControl, FormLabel, Input, ModalFooter, useDisclosure
+  FormControl, FormLabel, Input, ModalFooter, Select, useDisclosure
 } from '@chakra-ui/react';
 import { BiSolidChevronLeft, BiSolidPencil } from "react-icons/bi";
 import { BsXCircle, BsPlusLg } from "react-icons/bs";
@@ -19,10 +19,11 @@ const Loans = () => {
     id_material: '',
     loan_date: '',
     return_date: '',
-    status: 'Active'
+    status: 'Active' // default status
   });
+  const [usuarios, setUsuarios] = useState([]);
+  const [materiales, setMateriales] = useState([]);
 
-  // Authorization token stored in localStorage or wherever it is kept
   const token = localStorage.getItem('token');
 
   // Fetch loans from API
@@ -37,6 +38,41 @@ const Loans = () => {
       .then(response => response.json())
       .then(data => setLoans(data))
       .catch(error => console.error('Error fetching loans:', error));
+  }, [token]);
+
+  // Fetch usuarios from API
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+
+        const data = await response.json();
+        setUsuarios(data);
+      } catch (error) {
+        console.error('Error al hacer la solicitud de usuarios:', error);
+      }
+    };
+    fetchUsuarios();
+  }, [token]);
+
+  // Fetch materiales from API
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/material/', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    })
+      .then(response => response.json())
+      .then(data => setMateriales(data))
+      .catch(error => console.error('Error fetching materials:', error));
   }, [token]);
 
   const handleEdit = (loan) => {
@@ -80,8 +116,6 @@ const Loans = () => {
         body: JSON.stringify(updatedLoan)
       });
 
-      console.log("🔹 Respuesta del backend:", response);
-
       if (response.ok) {
         const data = await response.json();
         setLoans(loans.map(loan => loan.ID_Loan === data.ID_Loan ? data : loan));
@@ -96,7 +130,6 @@ const Loans = () => {
   };
 
   const handleSaveNewLoan = async () => {
-    // Validación para asegurarse de que todos los campos estén completos
     if (!newLoan.id_user || !newLoan.id_material || !newLoan.loan_date || !newLoan.return_date) {
       console.error('Todos los campos son requeridos');
       return;
@@ -105,7 +138,7 @@ const Loans = () => {
     const loanToAdd = {
       id_user: Number(newLoan.id_user),
       id_material: Number(newLoan.id_material),
-      loan_date: newLoan.loan_date, // Usar la fecha seleccionada
+      loan_date: newLoan.loan_date, 
       return_date: newLoan.return_date,
       status: 'Active'
     };
@@ -122,7 +155,6 @@ const Loans = () => {
         body: JSON.stringify(loanToAdd),
       });
 
-      // Verificar que la respuesta sea exitosa
       if (response.ok) {
         const addedLoan = await response.json();
         setLoans([...loans, addedLoan]);
@@ -173,28 +205,32 @@ const Loans = () => {
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>
             <Tr>
-              <Th>ID Prestamo</Th>
-              <Th>ID de usuario</Th>
-              <Th>ID de Material</Th>
+              <Th>Usuario</Th>
+              <Th>Material</Th>
               <Th>Fecha de Prestamo</Th>
               <Th>Fecha de Regreso</Th>
+              <Th>Estatus</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {loans.map(loan => (
-              <Tr key={loan.ID_Loan}>
-                <Td>{loan.ID_Loan}</Td>
-                <Td>{loan.id_user}</Td>
-                <Td>{loan.id_material}</Td>
-                <Td>{loan.loan_date}</Td>
-                <Td>{loan.return_date}</Td>
-                <Td>
-                  <IconButton icon={<BiSolidPencil />} size='sm' colorScheme="blue" variant='ghost' mr={2} onClick={() => handleEdit(loan)} />
-                  <IconButton icon={<BsXCircle />} size='sm' colorScheme="red" variant='ghost' onClick={() => handleDeleteLoan(loan.ID_Loan)} />
-                </Td>
-              </Tr>
-            ))}
+            {loans.map(loan => {
+              const user = usuarios.find(u => u.id === loan.id_user);
+              const material = materiales.find(m => m.ID_Material === loan.id_material);
+              return (
+                <Tr key={loan.ID_Loan}>
+                  <Td>{user ? user.name : 'Usuario no encontrado'}</Td>
+                  <Td>{material ? material.material_type : 'Material no encontrado'}</Td>
+                  <Td>{loan.loan_date}</Td>
+                  <Td>{loan.return_date}</Td>
+                  <Td>{loan.status}</Td>
+                  <Td>
+                    <IconButton icon={<BiSolidPencil />} size='sm' colorScheme="blue" variant='ghost' mr={2} onClick={() => handleEdit(loan)} />
+                    <IconButton icon={<BsXCircle />} size='sm' colorScheme="red" variant='ghost' onClick={() => handleDeleteLoan(loan.ID_Loan)} />
+                  </Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </Box>
@@ -207,20 +243,48 @@ const Loans = () => {
           <ModalCloseButton />
           <ModalBody>
             <FormControl mb={4}>
-              <FormLabel>User ID</FormLabel>
-              <Input type="number" value={newLoan.id_user} onChange={(e) => setNewLoan({ ...newLoan, id_user: e.target.value })} />
+              <FormLabel>User</FormLabel>
+              <Select
+                value={newLoan.id_user}
+                onChange={(e) => setNewLoan({ ...newLoan, id_user: e.target.value })}
+              >
+                <option value="">Select User</option>
+                {usuarios.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             <FormControl mb={4}>
-              <FormLabel>Material ID</FormLabel>
-              <Input type="number" value={newLoan.id_material} onChange={(e) => setNewLoan({ ...newLoan, id_material: e.target.value })} />
+              <FormLabel>Material</FormLabel>
+              <Select
+                value={newLoan.id_material}
+                onChange={(e) => setNewLoan({ ...newLoan, id_material: e.target.value })}
+              >
+                <option value="">Select Material</option>
+                {materiales.map(material => (
+                  <option key={material.ID_Material} value={material.ID_Material}>
+                    {material.material_type}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Loan Date</FormLabel>
-              <Input type="date" value={newLoan.loan_date} onChange={(e) => setNewLoan({ ...newLoan, loan_date: e.target.value })} />
+              <Input
+                type="date"
+                value={newLoan.loan_date}
+                onChange={(e) => setNewLoan({ ...newLoan, loan_date: e.target.value })}
+              />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Return Date</FormLabel>
-              <Input type="date" value={newLoan.return_date} onChange={(e) => setNewLoan({ ...newLoan, return_date: e.target.value })} />
+              <Input
+                type="date"
+                value={newLoan.return_date}
+                onChange={(e) => setNewLoan({ ...newLoan, return_date: e.target.value })}
+              />
             </FormControl>
           </ModalBody>
           <ModalFooter>
@@ -238,20 +302,59 @@ const Loans = () => {
           <ModalCloseButton />
           <ModalBody>
             <FormControl mb={4}>
-              <FormLabel>User ID</FormLabel>
-              <Input type="number" value={selectedLoan?.id_user || ''} onChange={(e) => setSelectedLoan({ ...selectedLoan, id_user: e.target.value })} />
+              <FormLabel>User</FormLabel>
+              <Select
+                value={selectedLoan?.id_user}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, id_user: e.target.value })}
+              >
+                <option value="">Select User</option>
+                {usuarios.map(user => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             <FormControl mb={4}>
-              <FormLabel>Material ID</FormLabel>
-              <Input type="number" value={selectedLoan?.id_material || ''} onChange={(e) => setSelectedLoan({ ...selectedLoan, id_material: e.target.value })} />
+              <FormLabel>Material</FormLabel>
+              <Select
+                value={selectedLoan?.id_material}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, id_material: e.target.value })}
+              >
+                <option value="">Select Material</option>
+                {materiales.map(material => (
+                  <option key={material.ID_Material} value={material.ID_Material}>
+                    {material.material_type}
+                  </option>
+                ))}
+              </Select>
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Loan Date</FormLabel>
-              <Input type="date" value={selectedLoan?.loan_date || ''} onChange={(e) => setSelectedLoan({ ...selectedLoan, loan_date: e.target.value })} />
+              <Input
+                type="date"
+                value={selectedLoan?.loan_date || ''}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, loan_date: e.target.value })}
+              />
             </FormControl>
             <FormControl mb={4}>
               <FormLabel>Return Date</FormLabel>
-              <Input type="date" value={selectedLoan?.return_date || ''} onChange={(e) => setSelectedLoan({ ...selectedLoan, return_date: e.target.value })} />
+              <Input
+                type="date"
+                value={selectedLoan?.return_date || ''}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, return_date: e.target.value })}
+              />
+            </FormControl>
+            <FormControl mb={4}>
+              <FormLabel>Status</FormLabel>
+              <Select
+                value={selectedLoan?.status || 'Active'}
+                onChange={(e) => setSelectedLoan({ ...selectedLoan, status: e.target.value })}
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Blocked">Blocked</option>
+              </Select>
             </FormControl>
           </ModalBody>
           <ModalFooter>

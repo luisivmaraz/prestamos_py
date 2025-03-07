@@ -159,7 +159,6 @@ const Usuarios = () => {
         <Table variant="striped" colorScheme='teal' size='sm'>
           <Thead>
             <Tr>
-              <Th>ID</Th>
               <Th>Nombre</Th>
               <Th>Apellido</Th>
               <Th>Tipo</Th>
@@ -174,7 +173,6 @@ const Usuarios = () => {
           <Tbody>
             {usuarios.map(user => (
               <Tr key={user.id}>
-                <Td>{user.id}</Td>
                 <Td>{user.name}</Td>
                 <Td>{user.last_name}</Td>
                 <Td>{user.type_user}</Td>

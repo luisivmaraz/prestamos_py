@@ -4,28 +4,32 @@ import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('usuario@dominio.com');
-  const [password, setPassword] = useState('contraseña123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const users = [
-      { email: 'usuario@dominio.com', password: 'contraseña123' },
-      { email: 'kalid@', password: 'kalid' },
-      { email: 'aldo@', password: 'aldo' }
-    ];
-  
-    const isValidUser = users.some(user => user.email === email && user.password === password);
-  
-    if (isValidUser) {
-      localStorage.setItem('token', 'dummy_token'); // Guardamos un token de ejemplo
-      navigate('/Dashboard'); // Redirigimos al Dashboard
-    } else {
-      setError('Credenciales incorrectas.');
+    try {
+      const response = await fetch('http://127.0.0.1:8000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (!response.ok) {
+        throw new Error('Credenciales incorrectas.');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token); // Guardar token
+      navigate('/Dashboard'); // Redirigir al Dashboard
+    } catch (error) {
+      setError(error.message);
     }
   };
-  
 
   return (
     <Box backgroundColor="teal.500" minHeight="100vh" display="flex" justifyContent="center" alignItems="center">
@@ -65,7 +69,7 @@ const Login = () => {
             colorScheme='teal'
             variant='solid'
             marginBottom={10}
-            onClick={handleLogin} // Activar la función de login
+            onClick={handleLogin}
           >
             Iniciar sesión
           </Button>
