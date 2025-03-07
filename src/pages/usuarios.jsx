@@ -146,7 +146,7 @@ const Usuarios = () => {
   return (
     <Box backgroundColor="teal.600" minHeight="100vh" p={5} display="flex" flexDirection="column" alignItems="center">
       <Heading color="white" textAlign="center" mb={8} fontSize="3xl">Gestión de Usuarios</Heading>
-      <Box bg="white" p={6} borderRadius="lg" boxShadow="xl" width="80%">
+      <Box bg="white" p={6} borderRadius="lg" boxShadow="xl" >
         <Button leftIcon={<BiSolidUserPlus />} colorScheme="teal" mb={4} onClick={onOpen}>
           Agregar Usuario
         </Button>
