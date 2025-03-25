@@ -28,7 +28,7 @@ const Loans = () => {
 
   // Fetch loans from API
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/loan', {
+    fetch('https://api-linux-prestamos-b4vl.onrender.com/loan/', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -44,7 +44,7 @@ const Loans = () => {
   useEffect(() => {
     const fetchUsuarios = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/user', {
+        const response = await fetch('https://api-linux-prestamos-b4vl.onrender.com/user', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -65,7 +65,7 @@ const Loans = () => {
 
   // Fetch materiales from API
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/material/', {
+    fetch('https://api-linux-prestamos-b4vl.onrender.com/material/', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -107,7 +107,7 @@ const Loans = () => {
     console.log("🔹 Enviando datos al backend:", JSON.stringify(updatedLoan));
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/loan/${selectedLoan.id}`, {
+      const response = await fetch(`https://api-linux-prestamos-b4vl.onrender.com/loan/${selectedLoan.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -146,7 +146,7 @@ const Loans = () => {
     console.log("Datos enviados al backend:", JSON.stringify(loanToAdd));
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/loan/', {
+      const response = await fetch('https://api-linux-prestamos-b4vl.onrender.com/loan/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ const Loans = () => {
   };
 
   const handleDeleteLoan = async (id) => {
-    const response = await fetch(`http://127.0.0.1:8000/loan/${id}`, {
+    const response = await fetch(`https://api-linux-prestamos-b4vl.onrender.com/loan/${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -257,19 +257,22 @@ const Loans = () => {
               </Select>
             </FormControl>
             <FormControl mb={4}>
-              <FormLabel>Material</FormLabel>
-              <Select
-                value={newLoan.id_material}
-                onChange={(e) => setNewLoan({ ...newLoan, id_material: e.target.value })}
-              >
-                <option value="">Select Material</option>
-                {materiales.map(material => (
-                  <option key={material.ID_Material} value={material.ID_Material}>
-                    {material.material_type}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
+  <FormLabel>Material</FormLabel>
+  <Select
+    value={newLoan.id_material}
+    onChange={(e) => setNewLoan({ ...newLoan, id_material: e.target.value })}
+  >
+    <option value="">Select Material</option>
+    {materiales
+      .filter(material => material.state == 'Available') 
+      .map(material => (
+        <option key={material.ID_Material} value={material.ID_Material}>
+          {material.material_type}
+        </option>
+      ))}
+  </Select>
+</FormControl>
+
             <FormControl mb={4}>
               <FormLabel>Loan Date</FormLabel>
               <Input

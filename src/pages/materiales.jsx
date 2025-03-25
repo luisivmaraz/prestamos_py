@@ -26,7 +26,7 @@ const Materiales = () => {
 
   // Obtener los materiales desde la API
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/material/', {
+    fetch('https://api-linux-prestamos-b4vl.onrender.com/material/', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -43,7 +43,7 @@ const Materiales = () => {
 
   const handleSaveEdit = () => {
     const updatedMaterial = selectedMaterial;
-    fetch(`http://127.0.0.1:8000/material/${selectedMaterial.ID_Material}/`, {
+    fetch(`https://api-linux-prestamos-b4vl.onrender.com/material/${selectedMaterial.ID_Material}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ const Materiales = () => {
 
   const handleSaveNewMaterial = () => {
     const materialToAdd = { ...newMaterial };
-    fetch('http://127.0.0.1:8000/material/', {
+    fetch('https://api-linux-prestamos-b4vl.onrender.com/material/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ const Materiales = () => {
     }
   
     try {
-      const response = await fetch(`http://127.0.0.1:8000/material/${id}`, {
+      const response = await fetch(`https://api-linux-prestamos-b4vl.onrender.com/material/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
