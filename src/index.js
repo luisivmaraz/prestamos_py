@@ -9,6 +9,7 @@ import Login from "./pages/login";
 import Usuarios from './pages/usuarios';
 import Materiales from './pages/materiales';
 import Prestamos from './pages/prestamos';
+import ProtectedRoute from './pages/ProtectedRoute';  // Asegúrate de que esta importación sea correcta
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,14 +17,16 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/Usuarios" element={<Usuarios />} />
-        <Route path="/Materiales" element={<Materiales />} />
-        <Route path="/Prestamos" element={<Prestamos />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Usuarios" element={<Usuarios />} />
+          <Route path="/Materiales" element={<Materiales />} />
+          <Route path="/Prestamos" element={<Prestamos />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   </ChakraProvider>
 );
-
 
 reportWebVitals();
